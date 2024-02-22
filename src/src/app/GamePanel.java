@@ -4,8 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable {
-    private static final int BOARD_WIDTH = 600;
-    private static final int BOARD_HEIGHT = 600;
+    private static final int BOARD_WIDTH = 1000;
+    private static final int BOARD_HEIGHT = 1000;
     private static final int FPS = 60;
 
     Thread thread;
@@ -14,7 +14,6 @@ public class GamePanel extends JPanel implements Runnable {
     GamePanel(){
         this.setBackground(Color.BLACK);
         this.setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
-        System.out.println(this.getSize());
 
         playManager = new PlayManager();
     }
@@ -48,6 +47,8 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     private void update(){
-        playManager.update();
+        if(!KeyHandler.pause && !playManager.isGameOver) {
+            playManager.update();
+        }
     }
 }
