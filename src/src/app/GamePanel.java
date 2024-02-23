@@ -4,9 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GamePanel extends JPanel implements Runnable {
-    private static final int BOARD_WIDTH = 1000;
-    private static final int BOARD_HEIGHT = 1000;
-    private static final int FPS = 60;
+    public static final int BOARD_WIDTH = 950;
+    public static final int BOARD_HEIGHT = 950;
+    private static final int FPS = 1;
 
     Thread thread;
     PlayManager playManager;
@@ -14,8 +14,18 @@ public class GamePanel extends JPanel implements Runnable {
     GamePanel(){
         this.setBackground(Color.BLACK);
         this.setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
+        this.setLayout(null);
+        this.addKeyListener(new KeyHandler());
+        this.setFocusable(true);
 
         playManager = new PlayManager();
+
+        startGame();
+    }
+
+    public void startGame(){
+        thread = new Thread(this);
+        thread.start();
     }
 
     public void paintComponent(Graphics g){
@@ -27,7 +37,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        double drawInterval = 1_000_000_000 / FPS;  // 1 000 000 000 / fps
+        double drawInterval = (double) 1_000_000_000 / FPS;  // 1 000 000 000 / fps
         double delta = 0;
         long lastTime = System.nanoTime();
         long currTime;
@@ -47,7 +57,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     private void update(){
-        if(!KeyHandler.pause && !playManager.isGameOver) {
+        if(!playManager.isGameOver) {
             playManager.update();
         }
     }
