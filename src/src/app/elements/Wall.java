@@ -12,7 +12,7 @@ public class Wall {
     }
 
     public byte getX() {
-        return x;
+        return this.x;
     }
 
     public void setX(byte x) {
@@ -20,7 +20,7 @@ public class Wall {
     }
 
     public byte getY() {
-        return y;
+        return this.y;
     }
 
     public void setY(byte y) {
