@@ -4,7 +4,6 @@ import java.awt.*;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class Emnemie {
     private byte x;
@@ -12,6 +11,8 @@ public class Emnemie {
     private char direction;
     SecureRandom secureRandom;
     private Color color;
+
+    boolean rightFlag, leftFlag, upFlag, downFlag;
 
     public Emnemie(byte x, byte y, Color color) {
         this.x = x;
@@ -61,7 +62,10 @@ public class Emnemie {
     }
 
     private char randomDirection(char currDirection, List<Wall> walls){
-        boolean rightFlag=false, leftFlag=false, upFlag=false, downFlag=false;
+        rightFlag=false;
+        leftFlag=false;
+        upFlag=false;
+        downFlag=false;
 
         for(Wall wall : walls){
             if(wall.getY()-1 == this.y && wall.getX() == this.x) {
@@ -84,13 +88,8 @@ public class Emnemie {
         if(!downFlag && currDirection!='u') possibleDirections.add('d');
         if(!upFlag && currDirection!='d') possibleDirections.add('u');
 
-        System.out.println(possibleDirections + " " + color + " " + direction + " " + this.x + " " + this.y);
+        //System.out.println(possibleDirections + " " + color + " " + direction + " " + this.x + " " + this.y);
 
-        if(possibleDirections.isEmpty()){
-            return currDirection;
-        }else {
-            byte index = (byte) secureRandom.nextInt(possibleDirections.size());
-            return possibleDirections.get(index);
-        }
+        return possibleDirections.get((byte) secureRandom.nextInt(possibleDirections.size()));
     }
 }

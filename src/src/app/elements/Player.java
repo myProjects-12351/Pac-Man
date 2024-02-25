@@ -76,46 +76,32 @@ public class Player {
     }
 
     private boolean ifCanGo(char direction, List<Wall> walls){
-        byte x;
-        byte y;
         switch (direction)
         {
             case 'r' -> {
-                for(short i=0; i<walls.size(); i++){
-                    x = walls.get(i).getX();
-                    y = walls.get(i).getY();
-
-                    if(this.x+1 == x && this.y==y){
+                for(Wall wall : walls){
+                    if(this.x+1 == wall.getX() && this.y == wall.getY()){
                         return false;
                     }
                 }
             }
             case 'l' -> {
-                for(short i=0; i<walls.size(); i++){
-                    x = walls.get(i).getX();
-                    y = walls.get(i).getY();
-
-                    if(this.x-1 == x && this.y==y){
+                for(Wall wall : walls){
+                    if(this.x-1 == wall.getX() && this.y == wall.getY()){
                         return false;
                     }
                 }
             }
             case 'u' -> {
-                for(short i=0; i<walls.size(); i++){
-                    x = walls.get(i).getX();
-                    y = walls.get(i).getY();
-
-                    if(this.x == x && this.y-1==y){
+                for(Wall wall : walls){
+                    if(this.x == wall.getX() && this.y-1 == wall.getY()){
                         return false;
                     }
                 }
             }
             case 'd' -> {
-                for(short i=0; i<walls.size(); i++){
-                    x = walls.get(i).getX();
-                    y = walls.get(i).getY();
-
-                    if(this.x == x && this.y+1==y){
+                for(Wall wall : walls){
+                    if(this.x == wall.getX() && this.y+1 == wall.getY()){
                         return false;
                     }
                 }

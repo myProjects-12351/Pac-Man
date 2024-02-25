@@ -60,9 +60,9 @@ public class PlayManager {
         for(Emnemie emnemie : emnemies){
             emnemie.update(walls);
 
-            if(player.getX() == emnemie.getX() && player.getY() == emnemie.getY()){
-                isGameOver = true;
-            }
+//            if(player.getX() == emnemie.getX() && player.getY() == emnemie.getY()){
+//                isGameOver = true;
+//            }
         }
     }
 
