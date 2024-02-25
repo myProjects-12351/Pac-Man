@@ -8,11 +8,13 @@ import java.util.List;
 public class Player {
     private byte x;
     private byte y;
+    private int score;
     private char direction;
     private boolean power;
 
-    public Player(byte x, byte y, char direction) {
-        this.power = false;
+    public Player(byte x, byte y, char direction, int score, boolean power) {
+        this.power = power;
+        this.score = score;
         this.direction = direction;
         this.x = x;
         this.y = y;

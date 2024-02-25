@@ -13,7 +13,7 @@ import java.util.List;
 public class PlayManager {
     public boolean isGameOver = false;
     public byte unitSize = 50;
-    private final byte amountOfEmnemies = 2;
+    private final byte amountOfEmnemies = 10;
     Player player;
     SecureRandom secureRandom;
 
@@ -33,28 +33,41 @@ public class PlayManager {
 
     }
 
-    public void draw(Graphics2D g2D){
-        for(Wall wall : walls){
-            wall.draw(g2D, unitSize);
-        }
+    public void draw(Graphics2D g2D) {
+        if (!isGameOver) {
+            for (Wall wall : walls) {
+                wall.draw(g2D, unitSize);
+            }
 
-        for(Emnemie emnemie : emnemies){
-            emnemie.draw(g2D, unitSize);
-        }
+            for (Emnemie emnemie : emnemies) {
+                emnemie.draw(g2D, unitSize);
+            }
 
-        player.draw(g2D, unitSize);
+            player.draw(g2D, unitSize);
+        }else if(isGameOver) {
+            g2D.setColor(Color.black);
+            g2D.fillRect(0,0,1000,1000);
+            g2D.setColor(Color.red);
+            String text = "GAME OVER";
+            g2D.setFont(new Font("Ink Free", Font.BOLD, 75));
+            g2D.drawString(text, 250,500);
+        }
     }
 
     public void update(){
         player.update(walls);
 
-        for(byte i=0; i<emnemies.size(); i++){
-            emnemies.get(i).update(walls);
+        for(Emnemie emnemie : emnemies){
+            emnemie.update(walls);
+
+            if(player.getX() == emnemie.getX() && player.getY() == emnemie.getY()){
+                isGameOver = true;
+            }
         }
     }
 
     private void setGame(){
-        player = new Player((byte) 1, (byte) 1, 'r');
+        player = new Player((byte) 1, (byte) 1, 'r', 0, false);
         secureRandom = new SecureRandom();
 
         byte i;
@@ -78,15 +91,15 @@ public class PlayManager {
         for(i=0; i<amountOfEmnemies; i++){
             byte x = (byte) secureRandom.nextInt(19);
             byte y = (byte) secureRandom.nextInt(19);
-            byte sum = (byte) ((byte) (x + y) % 6);
+            byte sum = (byte) ((byte) (x + y) % 3);
 
 
             switch (sum){
-                case 1 -> color = Color.red;
-                case 2 -> color = Color.cyan;
-                case 3 -> color = Color.green;
-                case 4 -> color = new Color(179, 0, 255);
-                case 5 -> color = new Color(255, 0, 228);
+                case 0 -> color = Color.red;
+                case 1 -> color = Color.cyan;
+                case 2 -> color = Color.green;
+                case 3 -> color = new Color(179, 0, 255);
+                case 4 -> color = new Color(255, 0, 228);
             }
 
             emnemies.add(new Emnemie(x, y, color));
