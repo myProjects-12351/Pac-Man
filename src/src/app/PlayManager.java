@@ -8,10 +8,12 @@ import app.elements.Wall;
 import java.awt.*;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class PlayManager {
     public boolean isGameOver = false;
+    public boolean isWin = false;
     public byte unitSize = 50;
     private final byte amountOfEmnemies = 10;
     Player player;
@@ -26,17 +28,16 @@ public class PlayManager {
 
     PlayManager(){
         setGame();
-
-        for (int i=0; i< walls.size(); i++){
-            walls.get(i).print();
-        }
-
     }
 
     public void draw(Graphics2D g2D) {
-        if (!isGameOver) {
+        if (!isGameOver && !isWin && !KeyHandler.pause) {
             for (Wall wall : walls) {
                 wall.draw(g2D, unitSize);
+            }
+
+            for(Point point : points){
+                point.draw(g2D, unitSize);
             }
 
             for (Emnemie emnemie : emnemies) {
@@ -45,12 +46,28 @@ public class PlayManager {
 
             player.draw(g2D, unitSize);
         }else if(isGameOver) {
-            g2D.setColor(Color.black);
-            g2D.fillRect(0,0,1000,1000);
-            g2D.setColor(Color.red);
-            String text = "GAME OVER";
-            g2D.setFont(new Font("Ink Free", Font.BOLD, 75));
-            g2D.drawString(text, 250,500);
+            Font font = new Font("Ink Free", Font.BOLD, 75);
+            String[] strings = {"YOU LOST", "Score: "+player.getScore()};
+            blackScreen(g2D, strings, Color.red, font, 250, 500);
+        } else if (isWin) {
+            Font font = new Font("Ink Free", Font.BOLD, 75);
+            String[] strings = {"YOU WON" ,"Score: "+player.getScore()};
+            blackScreen(g2D, strings, Color.green, font, 250, 500);
+        } else if (KeyHandler.pause) {
+            Font font = new Font("Ink Free", Font.BOLD, 75);
+            String[] strings = {"PAUSE", "Score: "+player.getScore()};
+            blackScreen(g2D, strings, Color.yellow, font, 250, 500);
+        }
+    }
+
+    private void blackScreen(Graphics2D g2D, String[] text, Color color, Font font, int x, int y){
+        g2D.setColor(Color.black);
+        g2D.fillRect(0,0,1000,1000);
+        g2D.setColor(color);
+        g2D.setFont(font);
+
+        for(int i=0; i<text.length; i++){
+            g2D.drawString(text[i], x, y + (i * font.getSize()));
         }
     }
 
@@ -60,9 +77,21 @@ public class PlayManager {
         for(Emnemie emnemie : emnemies){
             emnemie.update(walls);
 
-//            if(player.getX() == emnemie.getX() && player.getY() == emnemie.getY()){
-//                isGameOver = true;
-//            }
+            if(player.getX() == emnemie.getX() && player.getY() == emnemie.getY()){
+                isGameOver = true;
+            }
+        }
+
+        Iterator<Point> iterator = points.iterator();
+        while (iterator.hasNext()) {
+            Point point = iterator.next();
+            if (point.getX() == player.getX() && point.getY() == player.getY()) {
+                iterator.remove();
+                player.improveScoreBy(1);
+            }
+        }
+        if(points.isEmpty()){
+            isWin = true;
         }
     }
 
@@ -103,6 +132,22 @@ public class PlayManager {
             }
 
             emnemies.add(new Emnemie(x, y, color));
+        }
+
+        for(i = 0; i < (GamePanel.BOARD_HEIGHT / unitSize) - 1; i++) {
+            for(byte j = 0; j < (GamePanel.BOARD_WIDTH / unitSize) - 1; j++) {
+                boolean flag = true;
+                for(Wall wall : walls) {
+                    if(wall.getX() == i && wall.getY() == j) {
+                        flag = false;
+                        break;
+                    }
+                }
+                if(flag) {
+                    //points.add(new Point((byte)2, (byte)1, (byte)10));
+                    points.add(new Point(i, j, (byte)10));
+                }
+            }
         }
 
     }

@@ -19,7 +19,6 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
 
         playManager = new PlayManager();
-
         startGame();
     }
 
@@ -58,7 +57,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     private void update(){
-        if(!playManager.isGameOver) {
+        if(!playManager.isGameOver && !playManager.isWin && !KeyHandler.pause) {
             playManager.update();
         }
     }

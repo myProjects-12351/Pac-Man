@@ -36,6 +36,15 @@ public class Player {
         this.y = y;
     }
 
+    public void improveScoreBy(int increase){
+        score += increase;
+        System.out.println(score);
+    }
+
+    public int getScore(){
+        return score;
+    }
+
     public void update(List<Wall> walls){
         if(KeyHandler.direction != '\u0000')
             this.direction = KeyHandler.direction;

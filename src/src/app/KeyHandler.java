@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 public class KeyHandler implements KeyListener {
 
     public static char direction;
+    public static boolean pause = false;
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -14,6 +15,7 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_DOWN -> direction = 'd';
             case KeyEvent.VK_LEFT -> direction = 'l';
             case KeyEvent.VK_RIGHT -> direction = 'r';
+            case KeyEvent.VK_SPACE -> pause = !pause;
         }
     }
 
