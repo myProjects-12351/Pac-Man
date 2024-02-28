@@ -6,11 +6,13 @@ public class Point {
     private byte x;
     private byte y;
     private byte pointSize;
+    private boolean isPowerPoint;
 
-    public Point(byte x, byte y, byte pointSize) {
+    public Point(byte x, byte y, byte pointSize, boolean powerPoint) {
         this.x = x;
         this.y = y;
         this.pointSize = pointSize;
+        this.isPowerPoint = powerPoint;
     }
 
     public byte getX() {
@@ -29,8 +31,14 @@ public class Point {
         this.y = y;
     }
 
+    public boolean getPower(){
+        return isPowerPoint;
+    }
+
     public void draw(Graphics2D g2d, byte unitSize){
-        g2d.setColor(Color.white);
+        if (isPowerPoint) g2d.setColor(Color.yellow);
+        else g2d.setColor(Color.white);
+
         g2d.fillOval(this.x*unitSize + unitSize/2-pointSize/2, this.y*unitSize+unitSize/2-pointSize/2,pointSize,pointSize);
     }
 

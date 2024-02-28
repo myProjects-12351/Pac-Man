@@ -10,10 +10,10 @@ public class Player {
     private byte y;
     private int score;
     private char direction;
-    private boolean power;
+    private boolean superPower;
 
     public Player(byte x, byte y, char direction, int score, boolean power) {
-        this.power = power;
+        this.superPower = power;
         this.score = score;
         this.direction = direction;
         this.x = x;
@@ -43,6 +43,14 @@ public class Player {
 
     public int getScore(){
         return score;
+    }
+
+    public void setSuperPower(boolean stan){
+        this.superPower = stan;
+    }
+
+    public boolean getSuperPower(){
+        return superPower;
     }
 
     public void update(List<Wall> walls){
@@ -80,7 +88,11 @@ public class Player {
     }
 
     public void draw(Graphics2D g2d, byte unitSize){
-        g2d.setColor(Color.orange);
+        if(superPower)
+            g2d.setColor(Color.blue);
+        else
+            g2d.setColor(Color.orange);
+
         g2d.fillOval(x*unitSize+5, y*unitSize+5, unitSize-10, unitSize-10);
     }
 

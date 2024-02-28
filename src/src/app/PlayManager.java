@@ -16,6 +16,7 @@ public class PlayManager {
     public boolean isWin = false;
     public byte unitSize = 50;
     private final byte amountOfEmnemies = 10;
+    int time=0;
     Player player;
     SecureRandom secureRandom;
 
@@ -23,8 +24,10 @@ public class PlayManager {
     public List<Wall> walls = new ArrayList<>();
     // points
     List<Point> points = new ArrayList<>();
-    // pac man
+    Iterator<Point> pointIterator;
+            // pac man
     List<Emnemie> emnemies = new ArrayList<>();
+    Iterator<Emnemie> emnemieIterator;
 
     PlayManager(){
         setGame();
@@ -74,24 +77,40 @@ public class PlayManager {
     public void update(){
         player.update(walls);
 
-        for(Emnemie emnemie : emnemies){
+        emnemieIterator = emnemies.iterator();
+        while (emnemieIterator.hasNext()){
+            Emnemie emnemie = emnemieIterator.next();
             emnemie.update(walls);
-
             if(player.getX() == emnemie.getX() && player.getY() == emnemie.getY()){
-                isGameOver = true;
+                if (player.getSuperPower()){
+                    emnemieIterator.remove();
+                    player.improveScoreBy(10);
+                }else {
+                    isGameOver = true;
+                }
             }
         }
 
-        Iterator<Point> iterator = points.iterator();
-        while (iterator.hasNext()) {
-            Point point = iterator.next();
+        pointIterator = points.iterator();
+        while (pointIterator.hasNext()) {
+            Point point = pointIterator.next();
             if (point.getX() == player.getX() && point.getY() == player.getY()) {
-                iterator.remove();
+                pointIterator.remove();
+                if(point.getPower()){
+                    player.setSuperPower(true);
+                    time = 0;
+                }
                 player.improveScoreBy(1);
             }
         }
         if(points.isEmpty()){
             isWin = true;
+        }
+
+        if(player.getSuperPower()){
+            time++;
+            if(time == 10)
+                player.setSuperPower(false);
         }
     }
 
@@ -134,9 +153,12 @@ public class PlayManager {
             emnemies.add(new Emnemie(x, y, color));
         }
 
+        boolean flag;
+        boolean isPowerPoint;
         for(i = 0; i < (GamePanel.BOARD_HEIGHT / unitSize) - 1; i++) {
             for(byte j = 0; j < (GamePanel.BOARD_WIDTH / unitSize) - 1; j++) {
-                boolean flag = true;
+                flag = true;
+                isPowerPoint = false;
                 for(Wall wall : walls) {
                     if(wall.getX() == i && wall.getY() == j) {
                         flag = false;
@@ -144,8 +166,8 @@ public class PlayManager {
                     }
                 }
                 if(flag) {
-                    //points.add(new Point((byte)2, (byte)1, (byte)10));
-                    points.add(new Point(i, j, (byte)10));
+                    if(i * j % 50 == 0) isPowerPoint = true;
+                    points.add(new Point(i, j, (byte)10, isPowerPoint));
                 }
             }
         }
